@@ -24,16 +24,20 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     FetchImages event,
     Emitter<ImageState> emit,
   ) async {
-    emit(const ImagesLoading());
-    final images = await _imageRepository.getCuratedImages();
-    if (images.photos != null && images.photos!.isNotEmpty) {
-      emit(
-        ImagesLoaded(
-          images: images,
-          currentPhoto: images.photos!.first,
-        ),
-      );
-    } else {
+    try {
+      emit(const ImagesLoading());
+      final images = await _imageRepository.getCuratedImages();
+      if (images.photos != null && images.photos!.isNotEmpty) {
+        emit(
+          ImagesLoaded(
+            images: images,
+            currentPhoto: images.photos!.first,
+          ),
+        );
+      } else {
+        emit(const ImageLoadError(errorMessage: 'Could not fetch images'));
+      }
+    } catch (e) {
       emit(const ImageLoadError(errorMessage: 'Could not fetch images'));
     }
   }

@@ -114,10 +114,24 @@ class _HomeViewState extends State<HomeView> {
                                   state.images!.photos!.elementAt(index);
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, CupertinoPageRoute(
-                                      builder: (BuildContext context) {
-                                    return EnlargeImageScreen(image: image);
-                                  }));
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return ScaleTransition(
+                                          scale: animation,
+                                          child: child,
+                                        );
+                                      },
+                                      pageBuilder: (context, animation,
+                                          secondaryAnimation) {
+                                        return EnlargeImageScreen(
+                                          image: image,
+                                        );
+                                      },
+                                    ),
+                                  );
                                 },
                                 child: Hero(
                                   tag: '${image.id}',
